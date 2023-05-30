@@ -1,0 +1,5 @@
+{
+  "dbURI": "mongodb://127.0.0.1:27017/jshoppy",
+  "jwtSecret": "universityofmassachusettes",
+  "stripeapikey": "sk_test_51NDRUcD7pwv06NGydWsMSbM3cjQWvGO6h935JW0iq2mEPULN4nZldXNPATohNFTqbyBUgeIOz3oZOaokhKY4xLAo00yYpaZQpI"
+}
