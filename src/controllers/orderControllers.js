@@ -1,6 +1,5 @@
 import Order from '../models/Order.js'
 import Cart from '../models/Cart.js'
-import User from '../models/User.js'
 import stripe from 'stripe'
 import config from 'config'
 import { responseObject } from '../utils/helpers.js'
@@ -24,22 +23,33 @@ const get_orders = async (req, res) => {
   }
 }
 
-const checkout = async () => {
+const checkout = async (req, res) => {
   const userId = req.params.id
-  const { source } = req.body
   try {
-    const cart = Cart.findOne({ userId })
-    const user = User.findOne({ _id: userId })
-    const email = user.email
+    const cart = await Cart.findOne({ userId })
     if (cart) {
-      const charge = await stripe.ChargesResource.create({
-        amount: cart.bill,
-        currency: 'usd',
-        source,
-        receipt_email: email
+      const session = await Stripe.checkout.sessions.create({
+        line_items: [
+          {
+            price_data: {
+              currency: 'usd',
+              unit_amount: 500,
+              product_data: {
+                name: 'T-shirt',
+                description: 'Comfortable cotton t-shirt',
+                images: ['https://example.com/t-shirt.png'],
+              },
+            },
+            quantity: 1,
+          }
+        ],
+        mode: 'payment',
+        success_url: 'http://localhost:3002/order/success',
+        cancel_url: 'http://localhost:3002/order/cancel'
       })
-      if (!charge) throw Error('Payment failed')
-      if (charge) {
+      res.redirect(303, session.url);
+      if (!session) throw Error('Payment failed')
+      if (session) {
         const order = await Order.create({
           userId,
           items: cart.items,

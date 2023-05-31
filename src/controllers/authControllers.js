@@ -4,13 +4,13 @@ import bcrypt from 'bcrypt'
 import User from '../models/User.js'
 import { responseObject } from '../utils/helpers.js'
 
+const errorMessage = {
+  name: 'Please enter name',
+  email: 'Please enter email',
+  password: 'Please enter password',
+  userExists: 'User already exists'
+}
 const handleFieldError = (values) => {
-  const errorMessage = {
-    name: 'Please enter name',
-    email: 'Please enter email',
-    password: 'Please enter password',
-    userExists: 'User already exists'
-  }
   values.forEach((value) => {
     if (!value) return responseObject(res, {status: 400, data: {
       msg: errorMessage[`${value}`]

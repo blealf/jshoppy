@@ -18,6 +18,14 @@ const ItemSchema = new Schema({
         type: Number,
         required: true
     },
+    brand: {
+        type: String,
+    },
+    published: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     date_added: {
         type: Date,
         default: Date.now

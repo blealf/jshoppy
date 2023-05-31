@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken'
 import { responseObject } from '../utils/helpers.js'
 
 const auth = (req, res, next) => {
+  const authUrl = ['/register', '/login'].includes(req.url)
+
   const token = req.header('x-auth-token')
   if (!token) {
     return responseObject(res, {

@@ -2,8 +2,6 @@ import Cart from '../models/Cart.js'
 import Item from '../models/Item.js'
 import { responseObject, calculateTotalCartBill } from '../utils/helpers.js'
 
-
-
 const get_cart_items = async (req, res) => {
   const userId = req.params.id
   try {

@@ -19,11 +19,21 @@ const UserSchema = new Schema({
     required: [true, 'Please enter a valid password'],
     minLength: [6, 'Minimum password length must be 6characters']
   },
-  register_date: {
+  createdAt: {
     type: Date,
     default: Date.now
+  },
+  updatedAt: {
+    type: Date,
+    default: null
   }
 })
 
-// module.exports = User = mongoose.model('user', UserSchema)
+UserSchema.pre('save', function(next) {
+  if (!this.createdAt) {
+    this.createdAt = new Date()
+  }
+  next()
+})
+
 export default mongoose.model('user', UserSchema)

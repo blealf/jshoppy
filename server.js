@@ -3,16 +3,18 @@ import mongoose from 'mongoose'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import config from 'config'
-import router from './routes/index.js'
+import router from './src/routes/index.js'
+import authMiddleware from './src/middleware/auth.js'
 
 const app = express()
-const PORT = 3002
+const PORT = process.env.NODE_ENV === 'test' ? 4000 : 3002
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // middleware
 app.use(express.json())
+// app.use(authMiddleware)
 router(app)
 
 // if (process.env.NODE_ENV === 'production') {
@@ -27,7 +29,13 @@ app.get('/', (req, res) => {
   // res.send('Something')
 })
 
-const mongo = async () => {
+const server = () => {
+  return app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+  })
+}
+
+const startMongo = async () => {
   mongoose.set("strictQuery", false);
   const dbURI = config.get('dbURI')
   try {
@@ -39,9 +47,6 @@ const mongo = async () => {
   }
 }
 
-mongo()
+startMongo()
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`)
-})
-
+export default server()
